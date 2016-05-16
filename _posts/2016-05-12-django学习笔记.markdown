@@ -1,0 +1,40 @@
+---
+layout: post
+title:  "django学习笔记"
+date:   2016-05-12 11:04:00 +0800
+categories: ktfun update
+---
+
+### 1. projects vs apps
+*What’s the difference between a project and an app? An app is a Web application that does something – e.g., a Weblog system, a database of public records or a simple poll app. A project is a collection of configuration and apps for a particular Web site. A project can contain multiple apps. An app can be in multiple projects.*(摘录自https://docs.djangoproject.com/en/1.8/intro/tutorial01/)
+
+### 2. QuerySet API
+类似Entry.objects.filter(id__gt=4)这样的查询方式，详见于
+https://docs.djangoproject.com/en/1.8/ref/models/querysets/#id4
+
+### 3. Http404 vs get_object_or_404
+在views里面获取objects时，如果找不到，经常会raise 404错误。这里有两种写法：  
+
+* 第一种是使用try except + Http404
+{% highlight ruby %}
+class Question
+#...
+def detail(request, id):
+try:
+	question = Question.objects.get(pk=id)
+except Question.DoesNotExist:
+	raise Http404("Question does not exist")
+return render(request, 'polls/detail.html', {'question': question})
+{% endhighlight %}
+  
+* 第二种是直接使用get_object_or_404
+{% highlight ruby %}
+def detail(request, id):
+question = get_object_or_404(Question, pk=id)
+return render(request, 'polls/detail.html', {'question': question})
+{% endhighlight %}
+  
+官网上建议是使用第二种方式，理由如下  
+*Why do we use a helper function get_object_or_404() instead of automatically catching the ObjectDoesNotExist exceptions at a higher level, or having the model API raise Http404 instead of ObjectDoesNotExist?
+Because that would couple the model layer to the view layer. One of the foremost design goals of Django is to maintain loose coupling. Some controlled coupling is introduced in the django.shortcuts module.*  
+类似这种用法还有，用get_list_or_404来替换filter
