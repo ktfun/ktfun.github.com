@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "django学习笔记"
+title:  "windows编程之vs陷阱"
 date:   2016-05-12 11:04:00 +0800
 categories: ktfun update
 ---
